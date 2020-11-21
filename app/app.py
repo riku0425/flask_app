@@ -9,7 +9,7 @@ from sklearn.feature_selection import VarianceThreshold
 app = Flask(__name__,static_folder="static")
 app.config["SECRET_KEY"] = "secret_key"
 app.config["UPLOAD_FOLDER"] = "static"
-app.config["CLIENT_CSV"] = "Users\riku\Desktop\製作\flask\static"
+
 NAME = ["職種コード","勤務地　市区町村コード",
               "動画ファイル名","勤務地　都道府県コード","会社概要　業界コード","動画タイトル","職種コード","掲載期間　終了日",
               "拠点番号","掲載期間　開始日","公開区分","派遣会社のうれしい特典","お仕事名","（派遣先）職場の雰囲気","動画コメント",
@@ -96,7 +96,8 @@ def post():
             columns_name = df[15853:].index.values
             df = pd.DataFrame({'お仕事No.':columns_name,
                    '応募数 合計':ans,})
-            df.to_csv("static/submission.csv", index=False)
+            global data
+            data = df.to_csv("static\submission.csv", index=False)
             return render_template(("show.html"))
         else:
             print("error")
@@ -112,9 +113,9 @@ def show():
 
 @app.route("/download",methods=["get","post"])
 def download():
-    print("aaaa")
-    print(send_from_directory(app.config["CLIENT_CSV"],"submission.csv"))
-    return send_from_directory(app.config["UPLOAD_FOLDER"],"submission.csv")
+    # return Response(data,mimetype="text/csv",
+                    # headers={"Content-disposition":"attachement; filename=submission.csv"})
+    return send_file("static/submission.csv",as_attachment=True,mimetype="text/csv")
 
 
 if __name__ == "__main__":
