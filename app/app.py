@@ -67,7 +67,8 @@ def split(X,y,test):
 
 def pred(test):
     test = xgb.DMatrix(test)
-    with open('model.pkl', mode='rb') as f: 
+    model_root = os.path.join(basedir, "model.pkl")
+    with open(model_root, mode='rb') as f: 
         model = pickle.load(f)   
     ans = model.predict(test)   
     return ans       
