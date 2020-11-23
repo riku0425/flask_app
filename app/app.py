@@ -33,8 +33,8 @@ def to_csv(file):
     return df
 
 def read_csv():
-    df_trainx = pd.read_csv("../static/train_x.csv")
-    df_trainy = pd.read_csv("../static/train_y.csv")
+    df_trainx = pd.read_csv("./static/train_x.csv")
+    df_trainy = pd.read_csv("./static/train_y.csv")
     return df_trainx,df_trainy
 
 def concat_df(df_train, df_test):
