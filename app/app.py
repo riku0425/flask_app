@@ -5,10 +5,12 @@ import pandas as pd
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import VarianceThreshold
+import os
 
 app = Flask(__name__,static_folder="static")
 app.config["SECRET_KEY"] = "secret_key"
 app.config["UPLOAD_FOLDER"] = "static"
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 NAME = ["職種コード","勤務地　市区町村コード",
               "動画ファイル名","勤務地　都道府県コード","会社概要　業界コード","動画タイトル","職種コード","掲載期間　終了日",
@@ -28,13 +30,16 @@ def file_exist(file):
     file_name = str(file).split("'")[1]
     return file_name
 
+
 def to_csv(file):
     df = pd.read_csv(file)
     return df
 
 def read_csv():
-    df_trainx = pd.read_csv("./static/train_x.csv")
-    df_trainy = pd.read_csv("./static/train_y.csv")
+    root_x = os.path.join(basedir, "static", "train_x.csv")
+    root_y = os.path.join(basedir, "static", "train_y.csv")
+    df_trainx = pd.read_csv(root_x)
+    df_trainy = pd.read_csv(root_y)
     return df_trainx,df_trainy
 
 def concat_df(df_train, df_test):
@@ -77,6 +82,7 @@ def post():
         file = request.files["file_name"]
         if file_exist(file):
             print("ok")
+            print(basedir)
             #fileをcsvに変換
             df_test = to_csv(file)
             df_x, df_y = read_csv()
